@@ -9,19 +9,12 @@ if (!process.argv[2]) {
     return -1;
 }
 
-<<<<<<< HEAD
 var path_raw = path.parse(process.argv[2]);
 
 console.log("log"+ path_raw['name']);
 var cmd = util.format(convert, process.argv[2],
 		      path_raw['dir'], path_raw['name'],
 		      path_raw['dir'], path_raw['name']);
-=======
-var filename = process.argv[2].split('.')[0];
-
-console.log("log"+ filename);
-var cmd = util.format(convert, filename, filename);
->>>>>>> 6d33fc95e4355852a7de65748a7732d920ea03e3
 
 var convert_process = spawn(cmd);
 
