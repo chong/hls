@@ -4,7 +4,7 @@ var path = require('path');
 
 var cmd = 'ffmpeg';
 
-var convert = '-y -i %s -vcodec libx264  -r 25 -profile:v baseline -b:v 1500k -maxrate 2000k  -map 0 -flags -global_header -f segment -segment_list %s/ts/%s.m3u8 -segment_time 10 -segment_format mpeg_ts -segment_list_type m3u8  %s/ts/%s%03d.ts';
+var convert = '-y -i %s -s 368x208 -b 1500 -map 0 -flags -global_header -f segment -segment_list %s/ts/%s.m3u8 -segment_time 10 -segment_format mpeg_ts -segment_list_type m3u8 %s/ts/%s_%03d.ts';
 
 if (!process.argv[2]) {
     console.log("node video_to_segments.js video path");
@@ -18,15 +18,25 @@ var args = util.format(convert, process.argv[2],
 		      path_raw['dir'], path_raw['name'],
 		      path_raw['dir'], path_raw['name']);
 
+console.log("args:::::" + args.split(' '));
 
-var convert_process = spawn(cmd, args.split[' ']);
+var convert_process = spawn(cmd, args.split(' '));
 
+convert_process.stdout.on('data', function (data) {
+  console.log('stdout: ' + data);
+});
+
+convert_process.stderr.on('data', function (data) {
+  console.log('stderr: ' + data);
+});
 
 convert_process.on('exit', function(code){
+    if (code != 0)
+        console.log("error reture code " + code);
     if (code == 0)
 	console.log("convert complete");
     
 });
 
-console.log("cmd: " + cmd);
+console.log("cmd: " + cmd + args);
 
